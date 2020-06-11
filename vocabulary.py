@@ -4,12 +4,12 @@ class Vocabulary:
 
     def __init__(self, name):
         self.name = name
-        self.word2index = {}
+        self.word2index = {"." : 2}
         self.word2count = {}
         PAD_token = 0  # Used for padding short sentences
         SOS_token = 1  # Start-of-sentence token
         EOS_token = 2  # End-of-sentence token
-        self.index2word = {PAD_token: "#", SOS_token: "SOS", EOS_token: "EOS"}
+        self.index2word = {PAD_token: "#", SOS_token: "SOS", EOS_token: "."}
         self.num_words = 3
         self.num_sentences = 0
         self.longest_sentence = 0

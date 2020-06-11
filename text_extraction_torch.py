@@ -10,7 +10,7 @@ from numpy import zeros
 
 
 # https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb
-def get_text_embedding():
+def get_text_embedding(filepath):
 
     MAX_NUM_WORDS = 100000
 
@@ -47,7 +47,7 @@ def get_text_embedding():
     sentences = []
     modelIdList = []
     categoryList = []
-    with open('test.csv') as f:
+    with open(filepath) as f:
         data = csv.DictReader(f)
         for row in data:
             filepath = os.path.join(row["category"],row["modelId"]+".ply")
@@ -59,7 +59,8 @@ def get_text_embedding():
                     sentences.append(no_punct)
                     modelIdList.append(row["modelId"])
                     categoryList.append(row["category"])
-
+            else:
+                print(filepath,"does not exist")
     # print(sentences)
 
     voc = Vocabulary('test')
@@ -76,12 +77,12 @@ def get_text_embedding():
     max_input_len = voc.longest_sentence
     encoder_input_sequences = []
     for sentence in sentences:
-        sent_tkns = []
-        sent_idxs = []
+        sent_tkns = ["sos"]
+        sent_idxs = [0]
         for word in sentence.split(' '):
             sent_tkns.append(word)
             sent_idxs.append(voc.to_index(word))
-        sent_idxs += [0] * (max_input_len - len(sent_idxs)) # padding
+        sent_idxs += ([2] +[0] * (max_input_len + 1 - len(sent_idxs)) ) # padding
         # print(sent_tkns)
         # print(sent_idxs)
         encoder_input_sequences.append(sent_idxs)
@@ -113,6 +114,6 @@ def get_text_embedding():
             embedding_matrix[index] = embedding_vector
 
     # print(len(embeddings_dictionary["this"]))
-    return embedding_matrix, encoder_input_sequences, modelIdList, categoryList
+    return embedding_matrix.astype(np.float32), encoder_input_sequences, modelIdList, categoryList
 
 
