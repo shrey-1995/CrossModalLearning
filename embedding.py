@@ -55,7 +55,7 @@ class Encoder(nn.Module):
         # return self.rnn(self.embedding(inp))
         rnn_out = (rnn_out[:, :, :self.hid_dim] +
                 rnn_out[:, :, self.hid_dim:])
-        output,_ = torch.max(rnn_out,dim=1)
+        output = rnn_out[:,-1,:].squeeze(1)
         norm = output.norm(p=2, dim=1, keepdim=True)
         output = output.div(norm)
         return output
