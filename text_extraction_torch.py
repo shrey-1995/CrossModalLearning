@@ -47,6 +47,7 @@ def get_text_embedding(filepath):
     sentences = []
     modelIdList = []
     categoryList = []
+    caption_lengths = []
     with open(filepath) as f:
         data = csv.DictReader(f)
         for row in data:
@@ -82,6 +83,7 @@ def get_text_embedding(filepath):
         for word in sentence.split(' '):
             sent_tkns.append(word)
             sent_idxs.append(voc.to_index(word))
+        caption_lengths.append(len(sent_idxs))
         sent_idxs += ([2] +[0] * (max_input_len + 1 - len(sent_idxs)) ) # padding
         # print(sent_tkns)
         # print(sent_idxs)
@@ -114,6 +116,6 @@ def get_text_embedding(filepath):
             embedding_matrix[index] = embedding_vector
 
     # print(len(embeddings_dictionary["this"]))
-    return embedding_matrix.astype(np.float32), encoder_input_sequences, modelIdList, categoryList
+    return embedding_matrix.astype(np.float32), encoder_input_sequences, modelIdList, categoryList,caption_lengths
 
 
